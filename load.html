@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Search with Loading Animation</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; margin: 50px; }
+        .container { width: 60%; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); }
+        .tabs { display: flex; justify-content: center; margin-bottom: 15px; }
+        .tab { padding: 10px 20px; margin: 0 5px; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; background: #ddd; font-size: 16px; transition: background 0.3s; }
+        .tab.active { background: #007bff; color: white; border: 1px solid #0056b3; }
+        #searchBar { width: 100%; padding: 12px; font-size: 18px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
+        .result-container { margin-top: 15px; max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; background: #fff; }
+        .result-item { padding: 12px; border-bottom: 1px solid #eee; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+        .result-item:hover { background: #f0f0f0; }
+        .hidden { display: none; }
+        
+        /* Button Styles */
+        .load-btn { 
+            padding: 12px 20px; 
+            font-size: 18px; 
+            border: none; 
+            background: #007bff; 
+            color: white; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: background 0.3s;
+        }
+        .load-btn:disabled { 
+            background: #ccc; 
+            cursor: not-allowed; 
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Task Search with Loading Animation</h2>
+
+        <!-- Category Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="filterCategory('all')">All</div>
+            <div class="tab" onclick="filterCategory('work')">Work</div>
+            <div class="tab" onclick="filterCategory('personal')">Personal</div>
+            <div class="tab" onclick="filterCategory('shopping')">Shopping</div>
+        </div>
+
+        <!-- Search Bar -->
+        <input type="text" id="searchBar" onkeyup="searchTasks()" placeholder="Search tasks...">
+
+        <!-- Load Tasks Button with Spinner -->
+        <button class="load-btn" id="loadButton" onclick="fetchTasks()">
+            View Task
+            <div class="spinner" id="spinner"></div>
+        </button>
+
+        <!-- Task List -->
+        <div class="result-container" id="taskList"></div>
+    </div>
+
+    <script>
+        let selectedCategory = "all";
+        let tasks = [];
+
+        async function fetchTasks() {
+            let loadButton = document.getElementById("loadButton");
+            let spinner = document.getElementById("spinner");
+
+            // Show loading animation & disable button
+            loadButton.disabled = true;
+            spinner.style.display = "inline-block";
+
+            try {
+                const response = await fetch(`http://localhost:5000/tasks?category=${selectedCategory}`);
+                tasks = await response.json();
+                displayTasks();
+            } catch (error) {
+                console.error("Error fetching tasks:", error);
+            }
+
+            // Hide loading animation & enable button
+            spinner.style.display = "none";
+            loadButton.disabled = false;
+        }
+
+        function filterCategory(category) {
+            selectedCategory = category;
+            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+            event.target.classList.add("active");
+            fetchTasks();
+        }
+
+        function searchTasks() {
+            let input = document.getElementById("searchBar").value.toLowerCase();
+            displayTasks(input);
+        }
+
+        function displayTasks(filterText = "") {
+            let taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+
+            tasks.forEach(task => {
+                if (task.task_name.toLowerCase().includes(filterText)) {
+                    let taskItem = document.createElement("div");
+                    taskItem.classList.add("result-item");
+                    taskItem.textContent = task.task_name;
+                    taskList.appendChild(taskItem);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

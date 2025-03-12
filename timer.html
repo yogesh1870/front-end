@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager with Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input, button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #eee;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+        button {
+            cursor: pointer;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .delete {
+            background: red;
+            color: white;
+        }
+        .complete {
+            background: green;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📝 Task Manager with Notifications</h2>
+        <input type="text" id="taskInput" placeholder="Enter task description">
+        <input type="datetime-local" id="timeInput">
+        <button onclick="addTask()">➕ Add Notification</button>
+
+        <ul id="taskList"></ul>
+    </div>
+
+    <!-- Notification Sound -->
+    <audio id="notifySound">
+        <source src="notification.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById("taskInput").value.trim();
+            const timeInput = document.getElementById("timeInput").value;
+            if (!taskInput || !timeInput) return alert("Please enter a task and select a time!");
+
+            const taskList = document.getElementById("taskList");
+            const li = document.createElement("li");
+
+            li.innerHTML = `
+                <span>${taskInput} - ${new Date(timeInput).toLocaleString()}</span>
+                <button class="complete" onclick="markComplete(this)">✔ Complete</button>
+                <button class="delete" onclick="removeTask(this)">❌ Remove</button>
+            `;
+            taskList.appendChild(li);
+
+            scheduleNotification(taskInput, timeInput);
+        }
+
+        function removeTask(button) {
+            button.parentElement.remove();
+        }
+
+        function markComplete(button) {
+            button.parentElement.classList.toggle("completed");
+        }
+
+        function scheduleNotification(task, time) {
+            const reminderTime = new Date(time).getTime();
+            const now = new Date().getTime();
+            const delay = reminderTime - now;
+
+            if (delay <= 0) {
+                alert("Please select a future time!");
+                return;
+            }
+
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+
+            setTimeout(() => {
+                document.getElementById("notifySound").play();
+                navigator.vibrate(500);
+
+                if (Notification.permission === "granted") {
+                    new Notification("⏰ Task Reminder!", {
+                        body: task,
+                        icon: "notification-icon.png",
+                        requireInteraction: true
+                    });
+                }
+            }, delay);
+        }
+    </script>
+
+</body>
+</html>

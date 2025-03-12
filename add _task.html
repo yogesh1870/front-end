@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart To-Do List</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: ;
+            text-align: center;
+            margin: 50px;
+    background: url('download.gif') no-repeat center center fixed;
+    background-size: cover;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        h2 { 
+            color: #333; 
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 20px;
+            background: #ddd;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        .tab.active {
+            background: #007bff;
+            color: white;
+            transform: scale(1.1);
+        }
+        .tab:hover {
+            background: #0056b3;
+            color: white;
+        }
+
+        input, button {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input {
+            border: 1px solid #ccc;
+            transition: all 0.3s ease-in-out;
+        }
+        input:focus {
+            outline: none;
+            border: 1px solid #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .task-container {
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .task-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .task-item:hover {
+            background: #e9f7ff;
+            transform: scale(1.02);
+        }
+        .task-item.completed {
+            background: #d4f8d4;
+            text-decoration: line-through;
+            color: gray;
+        }
+        .task-item.fade-out {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .task-actions button {
+            padding: 6px 10px;
+            font-size: 14px;
+            margin-left: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            transition: 0.3s;
+        }
+        .complete-btn {
+            background: #28a745;
+            color: white;
+        }
+        .complete-btn:hover {
+            background: #1e7e34;
+        }
+        .delete-btn {
+            background: red;
+            color: white;
+        }
+        .delete-btn:hover {
+            background: darkred;
+        }
+
+        .task-time {
+            font-size: 12px;
+            color: gray;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+body 
+
+    <div class="container">
+        <h2> Smart To-Do List</h2>
+
+        <div class="tabs">
+            <div class="tab active" onclick="filterCategory('all')">All</div>
+            <div class="tab" onclick="filterCategory('work')">Work</div>
+            <div class="tab" onclick="filterCategory('personal')">Personal</div>
+            <div class="tab" onclick="filterCategory('shopping')">Shopping</div>
+        </div>
+
+        <!-- Search, Task Input, and Date-Time Picker -->
+        <input type="text" id="searchBar" onkeyup="searchTasks()" placeholder="🔍 Search tasks...">
+        <input type="text" id="taskInput" placeholder=" Add a new task">
+        <input type="datetime-local" id="taskDateTime">
+        <button onclick="addTask()"> Add Task</button>
+
+        <!-- Task List -->
+        <div class="task-container" id="taskList"></div>
+    </div>
+
+    <script>
+        let selectedCategory = "all";
+        let tasks = [];
+
+        function filterCategory(category) {
+            selectedCategory = category;
+            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+            event.target.classList.add("active");
+            displayTasks();
+        }
+
+        function searchTasks() {
+            let input = document.getElementById("searchBar").value.toLowerCase();
+            displayTasks(input);
+        }
+
+        function displayTasks(filterText = "") {
+            let taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+
+            tasks.forEach(task => {
+                if (task.task_name.toLowerCase().includes(filterText) && 
+                    (selectedCategory === "all" || task.category === selectedCategory)) {
+                    let taskItem = document.createElement("div");
+                    taskItem.classList.add("task-item");
+                    if (task.completed) taskItem.classList.add("completed");
+
+                    let taskDetails = document.createElement("div");
+                    taskDetails.innerHTML = `<span>${task.task_name}</span>`;
+
+                    let taskTime = document.createElement("div");
+                    taskTime.classList.add("task-time");
+                    taskTime.innerText = `Scheduled: ${new Date(task.timestamp).toLocaleString()}`;
+
+                    let taskActions = document.createElement("div");
+                    taskActions.classList.add("task-actions");
+                    let completeBtn = document.createElement("button");
+                    completeBtn.classList.add("complete-btn");
+                    completeBtn.innerText = "✔ Done";
+                    completeBtn.onclick = () => markTaskComplete(task.id);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.classList.add("delete-btn");
+                    deleteBtn.innerText = "❌ Delete";
+                    deleteBtn.onclick = () => deleteTask(task.id);
+
+                    taskActions.appendChild(completeBtn);
+                    taskActions.appendChild(deleteBtn);
+
+                    taskItem.appendChild(taskDetails);
+                    taskItem.appendChild(taskTime);
+                    taskItem.appendChild(taskActions);
+                    taskList.appendChild(taskItem);
+                }
+            });
+        }
+
+        function addTask() {
+            const taskInput = document.getElementById("taskInput");
+            const taskDateTime = document.getElementById("taskDateTime");
+            const taskName = taskInput.value.trim();
+            const taskTimestamp = taskDateTime.value;
+            if (!taskName || !taskTimestamp) return alert("Enter task & date!");
+
+            tasks.push({ id: Date.now(), task_name: taskName, category: selectedCategory, timestamp: taskTimestamp, completed: false });
+            taskInput.value = "";
+            taskDateTime.value = "";
+            displayTasks();
+        }
+
+        function markTaskComplete(id) {
+            tasks = tasks.map(task => task.id === id ? { ...task, completed: true } : task);
+            displayTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            displayTasks();
+        }
+
+        displayTasks();
+    </script>
+
+</body>
+</html>
+
