@@ -11,25 +11,25 @@
             height: 100vh;
             margin: 0; 
         }
-        .login-container {
+        .logincontainer {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 300px;
         }
-        .login-container h2 {
+        .logincontainer h2 {
             text-align: center;
             margin-bottom: 20px;
         }
-        .login-container input {
+        .logincontainer input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .login-container button {
+        .logincontainer button {
            background-color: #f44336;
             color: white;
             padding: 15px 30px;
@@ -38,7 +38,7 @@
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
-        .login-container button:hover {
+        .logincontainer button:hover {
             background-color: #fec27c;
         }
         img {
@@ -69,17 +69,52 @@
    
         
        
-         <hr color ="#fcc17b">   
-         <div class="login-container">
-        <h2>Login</h2>
-        <form action="/submit-login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button onclick="window.location.href='home.html'" type="submit" o>Login<i class="fa-solid fa-right-to-bracket"></i></button>
-        </form>
-    </div> 
-
+    <hr color ="#fcc17b">   
+    <form method="POST" action="login_store.php">
+        <div class="logincontainer" id="login-Container">
+            <h2>LOGIN</h2>
+                <input type="hidden" name="action" value="login">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="" required>
+                <div class="error"></div>
+    
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error"></div>
+    
+                <button type="submit">Login</button>
+            <div class="link">
+                <p>New user? <a href="#" onclick="switchForm('signup')">Create an account</a></p>
+            </div>
+        </div>
+    </form>
+    <form method="POST" action="login_store.php">
+        <div class="logincontainer" id="signup-Container" style="display: none;">
+            <h2>SIGN UP</h2>
+            <form method="POST">
+                <input type="hidden" name="action" value="signup">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" name="signupEmail" value="" required>
+                <div class="error"></div>
+    
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" name="signupPassword" required>
+                <div class="error"></div>
+    
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div class="error"></div>
+    
+                <button type="submit">Sign Up</button>
+            </form>
+            <div class="link">
+                <p>Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
+            </div>    
+        </div> 
+    </form>
+    <script>
+        function switchForm(formType) {
+            document.getElementById('login-Container').style.display = formType === 'login' ? 'block' : 'none';
+            document.getElementById('signup-Container').style.display = formType === 'signup' ? 'block' : 'none';
+        }
+    </script>
