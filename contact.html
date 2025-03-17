@@ -1,0 +1,94 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your  Information</title>
+    <style>
+	/* Basic styling for the web application */
+	body {
+    	font-family: Arial, sans-serif;
+    	margin: 0;
+   	padding: 0;
+    	background-color: #f4f4f9;
+	}
+
+	header {
+    	background-color: #333;
+    	color: white;
+    	text-align: center;
+    	padding: 20px 0;
+	}
+
+	main {
+    	padding: 20px;
+	}
+
+	form {
+    	background-color: white;
+    	padding: 20px;
+    	border-radius: 8px;
+    	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	form input, form textarea {
+    	width: 100%;
+    	padding: 10px;
+    	margin: 8px 0;
+    	border: 1px solid #ccc;
+    	border-radius: 4px;
+	}
+
+	form button {
+    	background-color: #4CAF50;
+    	color: white;
+    	padding: 10px 20px;
+    	border: none;
+    	border-radius: 4px;
+    	cursor: pointer;
+	}
+
+	form button:hover {
+    	background-color: #45a049;
+	}
+
+	footer {
+    	background-color: #333;
+    	color: white;
+    	text-align: center;
+    	padding: 10px;
+    	position: fixed;
+    	width: 100%;
+    	bottom: 0;
+	}
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Submit Your  Information</h1>
+    </header>
+
+    <main>
+        <section id="formSection">
+            <h2>Contact Form</h2>
+            <form id="contactForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+                
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Thinks to be done</p>
+    </footer>
+</body>
+</html>
