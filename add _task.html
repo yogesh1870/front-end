@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <title>Smart To-Do List</title>
+    <link rel="stylesheet" href="menu.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: ;
             text-align: center;
             margin: 50px;
-    background: url('download.gif') no-repeat center center fixed;
-    background-size: cover;
+            background: url('download.gif') no-repeat center center fixed;
+            background-size: cover;
         }
         .container {
             width: 50%;
@@ -145,7 +147,14 @@
     </style>
 </head>
 body 
-
+<div id="mySidenav" class="sidenav">
+    <a href="home.html" title=" Home" id="home" class="cta-button">         Home   <i class="fa-solid fa-house"></i></a>
+    <a href="add _task.html" class="cta-button" title=" Add Task"  id="addtask">    Add Task     <i class="fa-solid fa-circle-plus"></i></a>
+    <a href="load.html" class="cta-button" title=" Remainder Details" id="remainder">         View Task <i class="fa-solid fa-calendar-week"></i> </a>
+    <a href="contact.html" class="cta-button" title="Contact" id="contact">         Contact       <i class="fa-solid fa-mobile-retro"></i></a>
+     <a href="logout.html" class="cta-button" title="Log Out" id="logout">         Log Out      <i class="fa-solid fa-person-through-window"></i></a>
+     
+  </div> 
     <div class="container">
         <h2> Smart To-Do List</h2>
 
@@ -251,4 +260,3 @@ body
 
 </body>
 </html>
-
