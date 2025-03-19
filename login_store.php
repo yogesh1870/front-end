@@ -104,6 +104,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($stmt->execute()) {
                     $registrationSuccess = true;  // Registration successful
                     header("Location: home.html");  // Redirect to login page after successful signup
+
+                 
+    
+
+    // SQL query to create table
+    $sql = "CREATE TABLE `$email` (
+        task_id INT AUTO_INCREMENT PRIMARY KEY,
+        task_name VARCHAR(50) NOT NULL,
+        datetime DATETIME NOT NULL,
+        notification DATETIME NOT NULL
+    )";
+    $conn->query($sql);
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $_SESSION['userText'] = $_POST['userText'];
+    }
+    
+
                     exit();  // Ensure no further processing happens
                 } else {
                     $signupEmailError = "Error creating account. Please try again.";
